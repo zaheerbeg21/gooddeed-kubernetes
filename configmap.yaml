@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+
+metadata:
+  name: gooddeeds-config
+  namespace: gooddeeds
+
+data:
+  APP_ENV: production
+  DATABASE_NAME: gooddeed_db
+  DATABASE_USER: postgres
+  REDIS_URL: redis://redis-service:6379/0

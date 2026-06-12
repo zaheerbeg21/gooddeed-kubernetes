@@ -1,0 +1,73 @@
+How To Resume Today
+Step 1: Start Docker Desktop
+
+Windows:
+
+Open Docker Desktop.
+
+Wait until:
+
+Engine running
+
+appears.
+
+Step 2: Open WSL
+
+PowerShell:
+
+wsl -d Ubuntu
+Step 3: Verify Docker
+
+Inside Ubuntu:
+
+docker ps
+
+Expected:
+
+CONTAINER ID
+...
+minikube
+
+If it shows containers:
+
+✅ Docker connected
+
+Step 4: Verify Minikube
+minikube status
+
+Expected:
+
+host: Running
+kubelet: Running
+apiserver: Running
+
+If not:
+
+minikube start
+Step 5: Verify Kubernetes
+kubectl get nodes
+
+Expected:
+
+minikube Ready
+Step 6: Go To Project
+cd "/mnt/f/Career Path/gooddeed-kubernates"
+
+Verify:
+
+pwd
+
+Expected:
+
+/mnt/f/Career Path/gooddeed-kubernates
+Step 7: Verify Existing Resources
+kubectl get all -n gooddeeds
+
+Expected:
+
+postgres pod
+postgres deployment
+postgres service
+redis deployment
+
+Paste output if different.
