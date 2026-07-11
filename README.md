@@ -1,456 +1,307 @@
 # GoodDeeds Kubernetes Homelab
 
-## Project Overview
+> A production-inspired Kubernetes homelab that deploys a FastAPI application with PostgreSQL and Redis using Minikube. This project focuses on learning Kubernetes through real-world deployment, troubleshooting, and operational practices rather than following a simple tutorial.
 
-This project demonstrates deploying a containerized FastAPI application with PostgreSQL and Redis on Kubernetes using Minikube.
+---
 
-The objective was to gain hands-on experience with:
+# Project Overview
 
-* Docker
-* Kubernetes
-* Minikube
-* Deployments
-* Services
-* ConfigMaps
-* Secrets
-* Persistent Volumes
-* Scaling
-* Rolling Updates
-* Troubleshooting CrashLoopBackOff issues
+The objective of this project is to build, deploy, troubleshoot, and operate a multi-container application on Kubernetes while following production-like practices.
 
+The project demonstrates:
+
+- Docker image creation
+- Kubernetes Deployments
+- Kubernetes Services
+- ConfigMaps
+- Secrets Management
+- Persistent Volumes (PVC)
+- Rolling Updates
+- Scaling Applications
+- Kubernetes Troubleshooting
+- Production-style configuration management
+
+Rather than only deploying an application, this homelab intentionally documents real issues encountered during implementation and the process used to diagnose and resolve them.
+
+---
 
 # Architecture
 
 ```text
-                User
-                  |
-                  |
-            NodePort Service
-                  |
-                  |
-          GoodDeeds FastAPI
-                  |
-        --------------------
-        |                  |
-        |                  |
- PostgreSQL          Redis Cache
+                   User
+                     │
+                     │
+             NodePort Service
+                     │
+                     ▼
+            FastAPI Application
+                     │
+          ┌──────────┴──────────┐
+          │                     │
+          ▼                     ▼
+     PostgreSQL             Redis Cache
+          │
+          ▼
+ Persistent Volume Claim
 ```
 
-Components:
+---
 
-| Component             | Purpose                     |
-| --------------------- | --------------------------- |
-| FastAPI               | Backend API                 |
-| PostgreSQL            | Database                    |
-| Redis                 | Cache / Session Store       |
-| Kubernetes Deployment | Pod Management              |
-| Kubernetes Service    | Internal Communication      |
-| Secret                | Sensitive Values            |
-| ConfigMap             | Application Configuration   |
-| PVC                   | Persistent Database Storage |
+# Technology Stack
 
+| Technology | Purpose |
+|------------|---------|
+| Kubernetes | Container Orchestration |
+| Minikube | Local Kubernetes Cluster |
+| Docker | Containerization |
+| FastAPI | Backend API |
+| PostgreSQL | Relational Database |
+| Redis | In-memory Cache |
+| ConfigMaps | Application Configuration |
+| Secrets | Secure Configuration |
+| Persistent Volume Claims | Database Persistence |
 
-# Environment
+---
 
-* Windows 10
-* WSL2 Ubuntu
-* Docker Desktop
-* Minikube
-* Kubernetes
-* FastAPI
-* PostgreSQL 15
-* Redis 7
+# Development Environment
 
+- Windows 10
+- WSL2 (Ubuntu 24.04)
+- Docker Desktop
+- Minikube
+- kubectl
+- FastAPI
+- PostgreSQL 15
+- Redis 7
+
+---
 
 # Project Structure
 
 ```text
 gooddeed-kubernetes/
 
+├── api/
+├── postgresql/
+├── redis/
+│
 ├── namespace.yaml
 ├── secret.yaml
 ├── configmap.yaml
-
-├── api/
-│   ├── api-deployment.yaml
-│   └── api-service.yaml
-
-├── postgresql/
-│   ├── postgres-deployment.yaml
-│   ├── postgres-service.yaml
-│   └── postgres-pvc.yaml
-
-└── redis/
-    ├── redis-deployment.yaml
-    └── redis-service.yaml
+│
+├── README.md
+├── CHANGELOG.md
+├── TROUBLESHOOTING.md
+├── ROADMAP.md
+└── docs/
 ```
 
+---
 
-# Deployment Steps
+# Features Implemented
 
-## Start Minikube
+✅ Kubernetes Namespace
+
+✅ Deployments
+
+✅ ReplicaSets
+
+✅ Services
+
+✅ ConfigMaps
+
+✅ Secrets
+
+✅ Persistent Volume Claims
+
+✅ PostgreSQL Deployment
+
+✅ Redis Deployment
+
+✅ FastAPI Deployment
+
+✅ NodePort Service
+
+✅ Rolling Updates
+
+✅ Application Scaling
+
+✅ Production Configuration
+
+---
+
+# Kubernetes Skills Demonstrated
+
+- Docker Image Creation
+- Kubernetes Deployments
+- ReplicaSets
+- Services
+- ConfigMaps
+- Secrets
+- Persistent Storage
+- Environment Variables
+- Service Discovery
+- Rolling Updates
+- Scaling Applications
+- Kubernetes Debugging
+- Pod Lifecycle Management
+- Production Configuration Management
+
+---
+
+# Deployment
+
+Clone the repository
+
+```bash
+git clone https://github.com/zaheerbeg21/gooddeed-kubernetes.git
+```
+
+Start Minikube
 
 ```bash
 minikube start --driver=docker
 ```
 
-Verify:
-
-```bash
-kubectl get nodes
-```
-
-
-## Create Namespace
+Deploy all Kubernetes resources
 
 ```bash
 kubectl apply -f namespace.yaml
-```
 
-
-## Create Secret
-
-```bash
 kubectl apply -f secret.yaml
-```
 
-
-## Create ConfigMap
-
-```bash
 kubectl apply -f configmap.yaml
-```
 
-
-## Deploy PostgreSQL
-
-```bash
 kubectl apply -f postgresql/
-```
 
-
-## Deploy Redis
-
-```bash
 kubectl apply -f redis/
-```
 
-
-## Build API Docker Image
-
-```bash
-docker build -t gooddeeds-api:v1 .
-```
-
-Load image into Minikube:
-
-```bash
-minikube image load gooddeeds-api:v1
-```
-
-
-## Deploy API
-
-```bash
 kubectl apply -f api/
 ```
 
-
-# Major Issues Faced and Resolution
-
-## Issue 1: Minikube Driver Error
-
-Error:
-
-```text
-DRV_UNSUPPORTED_OS:
-The driver '' is not supported on linux/amd64
-```
-
-Cause:
-
-Minikube profile was corrupted and driver was not configured.
-
-Resolution:
+Verify deployment
 
 ```bash
-minikube delete
-minikube start --driver=docker
+kubectl get all -n gooddeeds
 ```
 
+---
 
-## Issue 2: Redis Service Missing
+# Troubleshooting Experience
 
-Problem:
+During development, several production-like issues were intentionally investigated and resolved, including:
 
-Redis deployment was running but no service existed.
+- Minikube driver configuration
+- Missing Kubernetes Secrets
+- Missing ConfigMaps
+- CrashLoopBackOff
+- ErrImageNeverPull
+- Redis service discovery
+- Application startup validation
+- Rolling Update verification
+- Image version mismatches
+- Deployment recovery
 
-Verification:
+Complete troubleshooting documentation is available in:
 
-```bash
-kubectl get svc -n gooddeeds
+```
+TROUBLESHOOTING.md
 ```
 
-Only PostgreSQL service was visible.
+---
 
-Cause:
+# Documentation
 
-redis-service.yaml was empty.
+| File | Description |
+|------|-------------|
+| README.md | Project Overview |
+| CHANGELOG.md | Progress History |
+| TROUBLESHOOTING.md | Production Issues & Resolutions |
+| ROADMAP.md | Upcoming Enhancements |
+| docs/PHASE-01.md | Phase 1 Documentation |
+| docs/PHASE-02.md | Health Checks (Upcoming) |
 
-Resolution:
+---
 
-Created Redis service manifest and applied:
+# Roadmap
 
-```bash
-kubectl apply -f redis-service.yaml
-```
+## Phase 1 ✅
 
-Result:
+- Kubernetes Deployment
+- PostgreSQL
+- Redis
+- ConfigMaps
+- Secrets
+- PVC
+- Scaling
+- Rolling Updates
+- Troubleshooting
 
-```text
-redis-service created
-```
+## Phase 2 (In Progress)
 
+- Liveness Probe
+- Readiness Probe
+- Startup Probe
+- Resource Requests
+- Resource Limits
 
-## Issue 3: API Pod CrashLoopBackOff
+## Phase 3
 
-Error:
+- Ingress Controller
+- Custom Domain
+- TLS
 
-```text
-CrashLoopBackOff
-```
+## Phase 4
 
-Investigation:
+- Helm Charts
 
-```bash
-kubectl logs deployment/gooddeeds-api -n gooddeeds
-```
+## Phase 5
 
-Found:
+- GitHub Actions CI/CD
 
-```text
-ValidationError:
-Insecure default values in production
-```
+## Phase 6
 
+- Prometheus
+- Grafana
 
-## Issue 4: Missing SECRET_KEY
+## Phase 7
 
-Error:
+- Horizontal Pod Autoscaler
 
-```text
-Insecure default values in production:
-secret_key
-```
+## Phase 8
 
-Cause:
+- Deploy to AWS EKS
 
-Application required SECRET_KEY environment variable.
-
-Fix:
-
-Added:
-
-```yaml
-SECRET_KEY: super-secret-key-for-kubernetes
-```
-
-to Kubernetes Secret.
-
-Applied:
-
-```bash
-kubectl apply -f secret.yaml
-```
-
-Restarted deployment:
-
-```bash
-kubectl rollout restart deployment gooddeeds-api -n gooddeeds
-```
-
-
-## Issue 5: Missing FIRST_ADMIN_PASSWORD
-
-Error:
-
-```text
-Insecure default values in production:
-first_admin_password
-```
-
-Cause:
-
-Application startup validation required admin password.
-
-Fix:
-
-Added:
-
-```yaml
-FIRST_ADMIN_PASSWORD: admin123
-```
-
-to secret.yaml.
-
-Applied:
-
-```bash
-kubectl apply -f secret.yaml
-
-kubectl rollout restart deployment gooddeeds-api -n gooddeeds
-```
-
-Result:
-
-```text
-Pod Status: Running
-```
-
-
-# Kubernetes Troubleshooting Commands Used
-
-View Pods:
-
-```bash
-kubectl get pods -n gooddeeds
-```
-
-Describe Pod:
-
-```bash
-kubectl describe pod <pod-name> -n gooddeeds
-```
-
-View Logs:
-
-```bash
-kubectl logs deployment/gooddeeds-api -n gooddeeds
-```
-
-View Events:
-
-```bash
-kubectl get events -n gooddeeds --sort-by=.metadata.creationTimestamp
-```
-
-Check Services:
-
-```bash
-kubectl get svc -n gooddeeds
-```
-
-Check Deployments:
-
-```bash
-kubectl get deployment -n gooddeeds
-```
-
-
-# Scaling Test
-
-Scaled API replicas:
-
-```bash
-kubectl scale deployment gooddeeds-api --replicas=3 -n gooddeeds
-```
-
-Result:
-
-```text
-3 Pods Running
-```
-
-Verified:
-
-```bash
-kubectl get deployment gooddeeds-api -n gooddeeds
-```
-
-Output:
-
-```text
-READY 3/3
-```
-
-
-# Rolling Update Test
-
-Built new image:
-
-```bash
-docker build -t gooddeeds-api:v2 .
-```
-
-Loaded image:
-
-```bash
-minikube image load gooddeeds-api:v2
-```
-
-Updated deployment:
-
-```bash
-kubectl set image deployment/gooddeeds-api \
-gooddeeds-api=gooddeeds-api:v2 \
--n gooddeeds
-```
-
-Verified:
-
-```bash
-kubectl rollout status deployment/gooddeeds-api -n gooddeeds
-```
-
-Result:
-
-```text
-deployment successfully rolled out
-```
-
-
-# Skills Demonstrated
-
-* Docker Image Creation
-* Kubernetes Deployments
-* Kubernetes Services
-* ConfigMaps
-* Secrets Management
-* Persistent Volumes
-* Service Discovery
-* FastAPI Deployment
-* PostgreSQL Deployment
-* Redis Deployment
-* CrashLoopBackOff Troubleshooting
-* Rolling Updates
-* Scaling Applications
-* Kubernetes Debugging
-* Production Configuration Management
-
+---
 
 # Lessons Learned
 
-* Never hardcode secrets inside containers.
-* Use ConfigMaps for configuration.
-* Use Secrets for sensitive data.
-* Always inspect logs before modifying deployments.
-* Kubernetes Services provide stable networking.
-* Rolling updates prevent downtime.
-* Minikube is excellent for learning production Kubernetes concepts.
+- Secrets should never be hardcoded.
+- ConfigMaps should manage application configuration.
+- Always investigate logs before modifying deployments.
+- Rolling updates minimize deployment downtime.
+- Kubernetes Services provide stable service discovery.
+- Production issues are best solved through systematic troubleshooting rather than trial and error.
 
+---
 
-# Future Improvements
+# Resume Highlights
 
-* Add Ingress Controller
-* Add TLS/HTTPS
-* Add Horizontal Pod Autoscaler
-* Add Prometheus Monitoring
-* Add Grafana Dashboards
-* Add CI/CD using GitHub Actions
-* Deploy to AWS EKS
-* Implement Helm Charts
-* Add ArgoCD GitOps
+This project demonstrates practical experience with:
 
-```
-```
+- Kubernetes Administration
+- Docker
+- Production-style Deployments
+- FastAPI Containerization
+- PostgreSQL & Redis on Kubernetes
+- Persistent Storage
+- Rolling Updates
+- Scaling
+- Kubernetes Troubleshooting
+- DevOps Operational Practices
 
+---
+
+# License
+
+This project is intended for educational and portfolio purposes.
