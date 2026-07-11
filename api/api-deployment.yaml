@@ -21,7 +21,7 @@ spec:
       containers:
       - name: gooddeeds-api
 
-        image: gooddeeds-api:v1
+        image: gooddeeds-api:v2
 
         imagePullPolicy: Never
 
